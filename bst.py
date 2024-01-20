@@ -169,20 +169,22 @@ class BinarySearchTree:
         old_node = node
         node = node.left
         old_node.left = node.right
+
+        if node.right:
+            node.right.parent = old_node.left
+
         node.right = old_node
+
+        old_node.parent = node.right
 
         return node
 
     def balanceBST(self):
-        # create dummy node with value 0
-        grand = Node(0)
 
-        # assign the right of dummy node as our input BST
-        grand.right = self.root
+        pseudo_root = Node(0, right=self.root)
+        count = self.bstToVine(pseudo_root)
 
-        count = self.bstToVine(grand)
-        # count = self.tree_to_linkedList(grand.right)
-        self.printPreorder(grand.right)
+        self.printInorder(pseudo_root.right)
         # get the height of tree in which all levels are completely filled
         h = int(math.log2(count + 1))
 
@@ -190,35 +192,37 @@ class BinarySearchTree:
         m = pow(2, h) - 1
 
         # left rotate for excess nodes at last level
-        self.compress(grand, count - m)
+        self.compress(pseudo_root, count - m)
 
         # left rotate till m becomes 0
         # Steps is done as mentioned in algorithm to make BST balanced.
         for m in [m // 2 ** i for i in range(1, h + 1)]:
-            self.compress(grand, m)
+            self.compress(pseudo_root, m)
 
-        self.root = grand.right
-    def compress(self, grand, m: int):
+        self.root = pseudo_root.right
+        pseudo_root.right = None
 
-        # Make tmp pointer to traverse and compress the given BST
-        tmp = grand.right
 
-        # Traverse and left-rotate root m times to compress given vine form of BST
-        for i in range(m):
-            oldTmp = tmp
-            tmp = tmp.right
-            grand.right = tmp
-            oldTmp.right = tmp.left
-            tmp.left = oldTmp
-            grand = tmp
-            tmp = tmp.right
+    def compress(self, pseudo_root, n):
+        node = pseudo_root
+        for i in range(n):
+            child = node.right
+            node.right = child.right
+            child.right.parent = node.right
+
+            node = node.right
+            child.right = node.left
+
+            if node.left:
+                node.left.parent = child.right
+
+            node.left = child
+            child.parent = node
 
     def maxDepth(self, node):
         if node is None:
             return 0
-
         else:
-
             # Compute the depth of each subtree
             lDepth = self.maxDepth(node.left)
             rDepth = self.maxDepth(node.right)

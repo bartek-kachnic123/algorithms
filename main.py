@@ -33,7 +33,7 @@ def print_hi(name):
     tree2.balanceBST()
     print()
     print(tree2.maxDepth(tree2.root))
-    tree2.travel2()
+    tree2.travel()
 
 
 
