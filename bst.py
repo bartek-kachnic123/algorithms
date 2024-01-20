@@ -117,23 +117,23 @@ class BinarySearchTree:
     def dsw_balance(self):
         self.tree_to_linkedList(self.root)
 
-    def rotate_right(self, subtree):
-        # if subtree is None or subtree.left is None:
-        #     return
-        subtree.data, subtree.left.data = subtree.left.data, subtree.data
-        tmp = subtree.left
-        subtree.left = tmp.left
-        tmp.left = tmp.right
-        tmp.right = subtree.right
-        subtree.right = tmp
-
-    def rotate_left(self, subtree):
-        tmp = subtree.right
-        subtree.right = tmp.right
-        tmp.right = tmp.left
-        tmp.left = subtree.left
-
-        subtree.data, subtree.right.data = subtree.right.data, subtree.data
+    # def rotate_right(self, subtree):
+    #     # if subtree is None or subtree.left is None:
+    #     #     return
+    #     subtree.data, subtree.left.data = subtree.left.data, subtree.data
+    #     tmp = subtree.left
+    #     subtree.left = tmp.left
+    #     tmp.left = tmp.right
+    #     tmp.right = subtree.right
+    #     subtree.right = tmp
+    #
+    # def rotate_left(self, subtree):
+    #     tmp = subtree.right
+    #     subtree.right = tmp.right
+    #     tmp.right = tmp.left
+    #     tmp.left = subtree.left
+    #
+    #     subtree.data, subtree.right.data = subtree.right.data, subtree.data
 
     def tree_to_linkedList(self, root):
         node = root
@@ -148,30 +148,31 @@ class BinarySearchTree:
             print("Good")
         return count
 
-    def bstToVine(self, grand):
+    def bstToVine(self, pseudo_root):
         count = 0
+        node = pseudo_root.right
 
-        # Make tmp pointer to traverse and right flatten the given BST
-        tmp = grand.right
-
-        # while tmp is not null
-        while tmp:
-
+        while node:
             # If left exist for node pointed by tmp then right rotate it
-            if tmp.left:
-                oldTmp = tmp
-                tmp = tmp.left
-                oldTmp.left = tmp.right
-                tmp.right = oldTmp
-                grand.right = tmp
-
+            if node.left:
+                node = self.rotate_right(node)
+                pseudo_root.right = node
             # If left dont exists add 1 to count and traverse further right to flatten remaining BST
             else:
                 count += 1
-                grand = tmp
-                tmp = tmp.right
+                pseudo_root = node
+                node = node.right
 
         return count
+
+    def rotate_right(self, node):
+        old_node = node
+        node = node.left
+        old_node.left = node.right
+        node.right = old_node
+
+        return node
+
     def balanceBST(self):
         # create dummy node with value 0
         grand = Node(0)
@@ -179,8 +180,8 @@ class BinarySearchTree:
         # assign the right of dummy node as our input BST
         grand.right = self.root
 
-        # count = self.bstToVine(grand)
-        count = self.tree_to_linkedList(grand.right)
+        count = self.bstToVine(grand)
+        # count = self.tree_to_linkedList(grand.right)
         self.printPreorder(grand.right)
         # get the height of tree in which all levels are completely filled
         h = int(math.log2(count + 1))
