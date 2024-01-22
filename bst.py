@@ -109,7 +109,7 @@ class BinarySearchTree:
 
     def travelUp(self, node, level=1):
         x = node
-        while x != self.root and level != 0:
+        while x and x != self.root and level != 0:
             x = x.parent
             level -= 1
         return x
@@ -165,19 +165,7 @@ class BinarySearchTree:
 
         return count
 
-    def rotate_right(self, node):
-        old_node = node
-        node = node.left
-        old_node.left = node.right
 
-        if node.right:
-            node.right.parent = old_node.left
-
-        node.right = old_node
-
-        old_node.parent = node.right
-
-        return node
 
     def balanceBST(self):
 
@@ -196,28 +184,65 @@ class BinarySearchTree:
 
         # left rotate till m becomes 0
         # Steps is done as mentioned in algorithm to make BST balanced.
-        for m in [m // 2 ** i for i in range(1, h + 1)]:
-            self.compress(pseudo_root, m)
+        for x in self._generate_iteration(m, h):
+            self.compress(pseudo_root, x)
 
-        self.root = pseudo_root.right
+        # self.root = pseudo_root.right
+        # self.root.parent = None
         pseudo_root.right = None
 
+    def _generate_iteration(self, m, h):
+        return (m // 2 ** i for i in range(1, h + 1))
 
     def compress(self, pseudo_root, n):
         node = pseudo_root
         for i in range(n):
-            child = node.right
-            node.right = child.right
-            child.right.parent = node.right
+            # child = node.right
+            # node.right = child.right
+            # node = node.right
+            # child.right = node.left
+            # node.left = child
+            if node.right:
+                child = node.right
+                node.right = child.left
+                if child.left:
+                    child.left.parent = node
+                child.parent = node.parent
+                if node.parent is None:
+                    self.root = child
+                elif node.parent.left == node:
+                    node.parent.left = child
+                else:
+                    node.parent.right = child
+                child.left = node
+                node.parent = child
 
-            node = node.right
-            child.right = node.left
+    def rotate_right(self, node):
+        # old_node = node
+        # node = node.left
+        #
+        # old_node.left = node.right
+        # if node.right:
+        #     node.right.parent = old_node.left
+        #
+        # node.right = old_node
+        #
+        # old_node.parent = node.right
+        child = node.left
+        node.left = child.right
+        if child.right:
+            child.right.parent = node
+        child.parent = node.parent
+        if node.parent is None:
+            self.root = child
+        elif node.parent.right == node:
+            node.parent.right = child
+        else:
+            node.parent.left = child
+        child.right = node
+        node.parent = child
 
-            if node.left:
-                node.left.parent = child.right
-
-            node.left = child
-            child.parent = node
+        return child
 
     def maxDepth(self, node):
         if node is None:

@@ -73,11 +73,19 @@ class BinaryTreeTest(unittest.TestCase):
         return max(self.get_height(node.left), self.get_height(node.right)) + 1
 
     def test_balanceBST(self):
-        for i in range(1, 6):
-            self.tree.insert(i)
-        self.assertFalse(self.is_balanced(self.tree.root))  # Ensure the tree is unbalanced before balancing
-        self.tree.balanceBST()
-        self.assertTrue(self.is_balanced(self.tree.root))  # Check if the tree is balanced after balancing
+        tree = BinaryTree()
+        for i in range(10, 3, -1):
+            tree.insert(i)
+
+        node = tree.search(9)
+        result = tree.travelUp(node, 10)
+        self.assertEqual(result.data, tree.root.data)
+        tree.balanceBST()
+        node2 = tree.search(10)
+        node3 = tree.search(9)
+        self.assertEqual(node2.parent.data,  node3.data)
+        node4 = tree.travelUp(node3, 10)
+        self.assertEqual(tree.root.data, node4.data)
 
 
 if __name__ == '__main__':
