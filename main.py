@@ -34,8 +34,9 @@ def print_hi(name):
     print()
     print(tree2.maxDepth(tree2.root))
     tree2.travel()
-
-
+    print()
+    for i in tree2.in_order():
+        print(i, end=" ")
 
 
 # Press the green button in the gutter to run the script.

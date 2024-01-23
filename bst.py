@@ -114,39 +114,29 @@ class BinarySearchTree:
             level -= 1
         return x
 
-    def dsw_balance(self):
-        self.tree_to_linkedList(self.root)
+    def in_order(self):
 
-    # def rotate_right(self, subtree):
-    #     # if subtree is None or subtree.left is None:
-    #     #     return
-    #     subtree.data, subtree.left.data = subtree.left.data, subtree.data
-    #     tmp = subtree.left
-    #     subtree.left = tmp.left
-    #     tmp.left = tmp.right
-    #     tmp.right = subtree.right
-    #     subtree.right = tmp
-    #
-    # def rotate_left(self, subtree):
-    #     tmp = subtree.right
-    #     subtree.right = tmp.right
-    #     tmp.right = tmp.left
-    #     tmp.left = subtree.left
-    #
-    #     subtree.data, subtree.right.data = subtree.right.data, subtree.data
+        # Set current to root of binary tree
+        current = self.root
 
-    def tree_to_linkedList(self, root):
-        node = root
-        count = 0
-        while node:
-            while node.left:
-                self.rotate_right(node)
-            node = node.right
-            count += 1
+        # Initialize stack
+        stack = []
 
-        if self.maxDepth(root) == count:
-            print("Good")
-        return count
+        while True:
+
+            if current:
+                stack.append(current)
+                current = current.left
+
+            elif stack:
+                current = stack.pop()
+                yield current.data
+                current = current.right
+
+            else:
+                break
+
+        print()
 
     def bstToVine(self, pseudo_root):
         count = 0
@@ -197,11 +187,6 @@ class BinarySearchTree:
     def compress(self, pseudo_root, n):
         node = pseudo_root
         for i in range(n):
-            # child = node.right
-            # node.right = child.right
-            # node = node.right
-            # child.right = node.left
-            # node.left = child
             if node.right:
                 child = node.right
                 node.right = child.left
