@@ -32,6 +32,9 @@ class BinaryTreeTest(unittest.TestCase):
         self.tree.remove(15)
         self.assertFalse(self.tree.search(15))
 
+    def test_remove_node_not_exists(self):
+        self.tree.remove(100)
+
     def test_remove_node_with_two_children(self):
         self.assertTrue(self.tree.search(5))
         self.tree.remove(5)
@@ -86,6 +89,18 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(node2.parent.data,  node3.data)
         node4 = tree.travelUp(node3, 10)
         self.assertEqual(tree.root.data, node4.data)
+
+    def test_travelUp_after_balance(self):
+        numbers = [1, 3, 6, 4, 2, 5, 91, 123, 11, 12312, 1]
+        tree = BinaryTree()
+        for i in numbers:
+            tree.insert(i)
+        tree.balanceBST()
+        for num in numbers:
+            node = tree.search(num)
+            self.assertEqual(tree.travelUp(node, 100).data, tree.root.data)
+
+
 
 
 if __name__ == '__main__':

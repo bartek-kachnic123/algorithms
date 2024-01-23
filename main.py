@@ -29,10 +29,10 @@ def print_hi(name):
     print()
     tree2.travel()
     print()
-    print(tree2.maxDepth(tree2.root))
+    print("przed", tree2.treeHeight())
     tree2.balanceBST()
     print()
-    print(tree2.maxDepth(tree2.root))
+    print("po: ", tree2.treeHeight())
     tree2.travel()
     print()
     for i in tree2.in_order():

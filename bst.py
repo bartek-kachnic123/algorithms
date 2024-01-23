@@ -14,7 +14,7 @@ class BinarySearchTree:
     def __init__(self, root=None):
         self.root = root
 
-    def isEmpty(self):
+    def is_empty(self):
         return self.root is None
 
     def travel(self):
@@ -61,7 +61,7 @@ class BinarySearchTree:
                 current = current.left
             else:
                 current = current.right
-        if self.isEmpty():
+        if self.is_empty():
             self.root = node
         elif parent.data > data:
             parent.left = node
@@ -112,12 +112,13 @@ class BinarySearchTree:
         while x and x != self.root and level != 0:
             x = x.parent
             level -= 1
-        return x
+        return x if x else self.root
 
     def in_order(self):
 
         # Set current to root of binary tree
         current = self.root
+
 
         # Initialize stack
         stack = []
@@ -156,13 +157,12 @@ class BinarySearchTree:
         return count
 
 
-
     def balanceBST(self):
 
-        pseudo_root = Node(0, right=self.root)
-        count = self.bstToVine(pseudo_root)
-
-        self.printInorder(pseudo_root.right)
+        # create dummy node with value 0
+        grand = Node(0, right=self.root)
+        #  get the number of nodes in input BST and simultaneously convert it into right linked list.
+        count = self.bstToVine(grand)
         # get the height of tree in which all levels are completely filled
         h = int(math.log2(count + 1))
 
@@ -170,49 +170,37 @@ class BinarySearchTree:
         m = pow(2, h) - 1
 
         # left rotate for excess nodes at last level
-        self.compress(pseudo_root, count - m)
+        self.compress(grand, count - m)
 
         # left rotate till m becomes 0
         # Steps is done as mentioned in algorithm to make BST balanced.
-        for x in self._generate_iteration(m, h):
-            self.compress(pseudo_root, x)
+        for m in [m // 2 ** i for i in range(1, h + 1)]:
+            self.compress(grand, m)
 
-        # self.root = pseudo_root.right
-        # self.root.parent = None
-        pseudo_root.right = None
+        # return the root of the balanced binary search tree
+        self.root = grand.right
+        self.root.parent = None
+        grand.right = None
 
     def _generate_iteration(self, m, h):
         return (m // 2 ** i for i in range(1, h + 1))
 
     def compress(self, pseudo_root, n):
-        node = pseudo_root
+        scanner = pseudo_root
         for i in range(n):
-            if node.right:
-                child = node.right
-                node.right = child.left
-                if child.left:
-                    child.left.parent = node
-                child.parent = node.parent
-                if node.parent is None:
-                    self.root = child
-                elif node.parent.left == node:
-                    node.parent.left = child
-                else:
-                    node.parent.right = child
-                child.left = node
-                node.parent = child
+            child = scanner.right
+            scanner.right = child.right
+            if child.right:
+                child.right.parent = scanner
 
+            scanner = scanner.right
+            child.right = scanner.left
+            if scanner.left:
+                scanner.left.parent = child
+
+            scanner.left = child
+            child.parent = scanner
     def rotate_right(self, node):
-        # old_node = node
-        # node = node.left
-        #
-        # old_node.left = node.right
-        # if node.right:
-        #     node.right.parent = old_node.left
-        #
-        # node.right = old_node
-        #
-        # old_node.parent = node.right
         child = node.left
         node.left = child.right
         if child.right:
@@ -242,3 +230,38 @@ class BinarySearchTree:
                 return lDepth + 1
             else:
                 return rDepth + 1
+
+    def treeHeight(self):
+
+        # Base Case
+        if self.root is None:
+            return 0
+
+        # Create a empty queue for level order traversal
+        q = []
+
+        # Enqueue Root and Initialize Height
+        q.append(self.root)
+        height = 0
+
+        while (True):
+
+            # nodeCount(queue size) indicates number of nodes
+            # at current level
+            nodeCount = len(q)
+            if nodeCount == 0:
+                return height
+
+            height += 1
+
+            # Dequeue all nodes of current level and Enqueue
+            # all nodes of next level
+            while (nodeCount > 0):
+                node = q[0]
+                q.pop(0)
+                if node.left is not None:
+                    q.append(node.left)
+                if node.right is not None:
+                    q.append(node.right)
+
+                nodeCount -= 1
