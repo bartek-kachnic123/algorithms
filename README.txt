@@ -41,5 +41,9 @@ I.     Implementacja algorytmu DSW w klasie BinarySearchTree.
 -> travelUp(node, level=1): (szukanie poprzedników) - zwraca poprzednika, który był o określoną
     liczbę level w górę (domyślnie 1 zwraca rodzica) aż do samego roota.
 
--> DSW składa się z:
-    -* bstToVine()
+-> balanceBST() - wykorzystuje algorytm DSW:
+    -* Najpierw tworzy pusty Node o nazwie pseudo_root z wkazaniem right na root
+    -* Następnie bstToVine - zmienia strukturę drzewa na vine (sorted linked list) za pomocą prawych rotacji
+    -* Wykonuje compress(pseudo_root, count - m) - wykonuje tyle lewych rotacji ile jest liści
+    -* Kolejno compress - przywraca strukturę drzewa za pomocą lewych rotacji
+    -* Zapisuje root jako pseudo_root.right i usuwa stworzonego pustego Node pseudo_root
