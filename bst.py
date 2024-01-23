@@ -139,16 +139,14 @@ class BinarySearchTree:
 
         print()
 
-    def bstToVine(self, pseudo_root):
+    def _bstToVine(self, pseudo_root):
         count = 0
         node = pseudo_root.right
 
         while node:
-            # If left exist for node pointed by tmp then right rotate it
             if node.left:
                 node = self.rotate_right(node)
                 pseudo_root.right = node
-            # If left dont exists add 1 to count and traverse further right to flatten remaining BST
             else:
                 count += 1
                 pseudo_root = node
@@ -158,26 +156,17 @@ class BinarySearchTree:
 
 
     def balanceBST(self):
-
-        # create dummy node with value 0
         grand = Node(0, right=self.root)
-        #  get the number of nodes in input BST and simultaneously convert it into right linked list.
-        count = self.bstToVine(grand)
-        # get the height of tree in which all levels are completely filled
-        h = int(math.log2(count + 1))
+        count = self._bstToVine(grand)
 
-        # get number of nodes until second last level
+        h = int(math.log2(count + 1))
         m = pow(2, h) - 1
 
-        # left rotate for excess nodes at last level
-        self.compress(grand, count - m)
+        self._compress(grand, count - m)
 
-        # left rotate till m becomes 0
-        # Steps is done as mentioned in algorithm to make BST balanced.
-        for m in [m // 2 ** i for i in range(1, h + 1)]:
-            self.compress(grand, m)
+        for x in self._generate_iteration(m, h):
+            self._compress(grand, x)
 
-        # return the root of the balanced binary search tree
         self.root = grand.right
         self.root.parent = None
         grand.right = None
@@ -185,7 +174,7 @@ class BinarySearchTree:
     def _generate_iteration(self, m, h):
         return (m // 2 ** i for i in range(1, h + 1))
 
-    def compress(self, pseudo_root, n):
+    def _compress(self, pseudo_root, n):
         scanner = pseudo_root
         for i in range(n):
             child = scanner.right
