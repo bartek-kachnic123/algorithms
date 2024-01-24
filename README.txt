@@ -11,7 +11,7 @@ Katalog bst zawiera:
 I.     Implementacja algorytmu DSW w klasie BinarySearchTree.
 
             1) bst.py - zawiera klasy BinarySearchTree i Node
-            2) main.py - program z testami klasy Poly
+            2) main.py - program z przykłądem użycia DSW
             3) tests.py - zawiera testy metod z klasy BinarySearchTree
 
 
@@ -40,6 +40,14 @@ I.     Implementacja algorytmu DSW w klasie BinarySearchTree.
 
 -> travelUp(node, level=1): (szukanie poprzedników) - zwraca poprzednika, który był o określoną
     liczbę level w górę (domyślnie 1 zwraca rodzica) aż do samego roota.
+
+-> height() - zwraca aktualną wysokośc drzewa
+
+-> inorder() - generator zwracający node z kolejnością inorder
+
+-> printPreorder() - wypisuje node.data z kolejnością preorder
+
+-> printInorder() - wypisuje node.data z kolejnością inorder
 
 -> balanceBST() - wykorzystuje algorytm DSW:
     -* Najpierw tworzy pusty Node o nazwie pseudo_root z wkazaniem right na root

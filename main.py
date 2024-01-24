@@ -16,7 +16,7 @@ def print_hi(name):
     node = tree.search(5)
     tree2 = bst.BinarySearchTree()
     tree2.insert(2)
-    tree2.travel()
+    tree2.printPreorder()
     tree2.remove(2)
     tree2.insert(5)
     tree2.insert(10)
@@ -27,15 +27,15 @@ def print_hi(name):
     for i in range(-10, -4, 1):
         tree2.insert(i)
     print()
-    tree2.travel()
+    tree2.printPreorder()
     print()
-    print("przed", tree2.treeHeight())
+    print("przed", tree2.height())
     tree2.balanceBST()
     print()
-    print("po: ", tree2.treeHeight())
-    tree2.travel()
+    print("po: ", tree2.height())
+    tree2.printInorder()
     print()
-    for i in tree2.in_order():
+    for i in tree2.inorder_g():
         print(i, end=" ")
 
 

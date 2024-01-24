@@ -47,33 +47,17 @@ class BinaryTreeTest(unittest.TestCase):
     def test_travelUp_to_root(self):
         node = self.tree.search(5)
         result = self.tree.travelUp(node)
-        self.assertEqual(result.data, 10)  # Expecting the root key
+        self.assertEqual(result.data, 10)
 
     def test_travelUp_to_level(self):
         node = self.tree.search(3)
         result = self.tree.travelUp(node, level=2)
-        self.assertEqual(result.data, 10)  # Expecting the key at level 2
+        self.assertEqual(result.data, 10)
 
     def test_travelUp_to_root_with_root_level(self):
         node = self.tree.search(15)
         result = self.tree.travelUp(node, level=0)
-        self.assertEqual(result.data, 15)  # Expecting the key of the n
-
-    def is_balanced(self, node):
-        # Helper function to check if the tree is balanced
-        if node is None:
-            return True
-
-        left_height = self.get_height(node.left)
-        right_height = self.get_height(node.right)
-
-        return abs(left_height - right_height) <= 1 and self.is_balanced(node.left) and self.is_balanced(node.right)
-
-    def get_height(self, node):
-        # Helper function to get the height of a tree
-        if node is None:
-            return 0
-        return max(self.get_height(node.left), self.get_height(node.right)) + 1
+        self.assertEqual(result.data, 15)
 
     def test_balanceBST(self):
         tree = BinaryTree()
@@ -91,17 +75,24 @@ class BinaryTreeTest(unittest.TestCase):
         self.assertEqual(tree.root.data, node4.data)
 
     def test_travelUp_after_balance(self):
-        numbers = [1, 3, 6, 4, 2, 5, 91, 123, 11, 12312, 1]
+        numbers = [1, 3, 6, 4, 2, 5, 91, 123, 11, 12312, 1, 3, 234, 23432,2 , 22,22,11]
         tree = BinaryTree()
         for i in numbers:
             tree.insert(i)
         tree.balanceBST()
         for num in numbers:
             node = tree.search(num)
-            self.assertEqual(tree.travelUp(node, 100).data, tree.root.data)
+            self.assertEqual(tree.travelUp(node, 4).data, tree.root.data)
 
-
-
+    def test_balanceBst(self):
+        numbers = [1, 3, 6, 4, 2, 5, 91, 123, 11, 12312, 1, 3, 234, 23432, 2, 22, 22, 11]
+        tree = BinaryTree()
+        for i in numbers:
+            tree.insert(i)
+        before = tree.height()
+        tree.balanceBST()
+        after = tree.height()
+        self.assertTrue(after < before)
 
 if __name__ == '__main__':
     unittest.main()

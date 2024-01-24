@@ -1,4 +1,5 @@
 import math
+import collections
 class Node:
     def __init__(self, data=None, left=None, right=None, parent=None):
         self.data = data
@@ -17,24 +18,23 @@ class BinarySearchTree:
     def is_empty(self):
         return self.root is None
 
-    def travel(self):
-        self.printInorder(self.root)
+    def printInorder(self):
+        self.inorder(self.root)
 
-    def printInorder(self, root):
+    def inorder(self, root):
         if root:
-            self.printInorder(root.left)
+            self.inorder(root.left)
             print(root.data, end=" "),
-            self.printInorder(root.right)
+            self.inorder(root.right)
 
-    def travel2(self):
-        self.printPreorder(self.root)
+    def printPreorder(self):
+        self.preorder(self.root)
 
-
-    def printPreorder(self, root):
+    def preorder(self, root):
         if root:
             print(root.data, end=" "),
-            self.printPreorder(root.left)
-            self.printPreorder(root.right)
+            self.preorder(root.left)
+            self.preorder(root.right)
 
     def search(self, data):
         current = self.root
@@ -114,13 +114,8 @@ class BinarySearchTree:
             level -= 1
         return x if x else self.root
 
-    def in_order(self):
-
-        # Set current to root of binary tree
+    def inorder_g(self):
         current = self.root
-
-
-        # Initialize stack
         stack = []
 
         while True:
@@ -137,16 +132,21 @@ class BinarySearchTree:
             else:
                 break
 
-        print()
-
     def _bstToVine(self, pseudo_root):
         count = 0
         node = pseudo_root.right
 
         while node:
             if node.left:
-                node = self.rotate_right(node)
-                pseudo_root.right = node
+
+                temp = node.left
+                node.left = temp.right
+                if temp.right:
+                    temp.right.parent = node
+                temp.right = node
+                node.parent = temp
+                node = temp
+                pseudo_root.right = temp
             else:
                 count += 1
                 pseudo_root = node
@@ -156,103 +156,58 @@ class BinarySearchTree:
 
 
     def balanceBST(self):
-        grand = Node(0, right=self.root)
-        count = self._bstToVine(grand)
+        pseudo_root = Node(0, right=self.root)
+        count = self._bstToVine(pseudo_root)
 
         h = int(math.log2(count + 1))
         m = pow(2, h) - 1
 
         leaves = count - m
-        self._compress(grand, leaves)
+        self._compress(pseudo_root, leaves)
         count = count - leaves
         while count > 1:
             count = count // 2
-            self._compress(grand, count)
+            self._compress(pseudo_root, count)
 
-        self.root = grand.right
+        self.root = pseudo_root.right
         self.root.parent = None
-        grand.right = None
-
-    def _generate_iteration(self, m, h):
-        return (m // 2 ** i for i in range(1, h + 1))
+        pseudo_root.right = None
 
     def _compress(self, pseudo_root, n):
-        scanner = pseudo_root
+        node = pseudo_root
         for i in range(n):
-            child = scanner.right
-            scanner.right = child.right
+            child = node.right
+            node.right = child.right
             if child.right:
-                child.right.parent = scanner
+                child.right.parent = node
 
-            scanner = scanner.right
-            child.right = scanner.left
-            if scanner.left:
-                scanner.left.parent = child
+            node = node.right
+            child.right = node.left
+            if node.left:
+                node.left.parent = child
 
-            scanner.left = child
-            child.parent = scanner
-    def rotate_right(self, node):
-        child = node.left
-        node.left = child.right
-        if child.right:
-            child.right.parent = node
-        child.parent = node.parent
-        if node.parent is None:
-            self.root = child
-        elif node.parent.right == node:
-            node.parent.right = child
-        else:
-            node.parent.left = child
-        child.right = node
-        node.parent = child
+            node.left = child
+            child.parent = node
 
-        return child
-
-    def maxDepth(self, node):
-        if node is None:
-            return 0
-        else:
-            # Compute the depth of each subtree
-            lDepth = self.maxDepth(node.left)
-            rDepth = self.maxDepth(node.right)
-
-            # Use the larger one
-            if lDepth > rDepth:
-                return lDepth + 1
-            else:
-                return rDepth + 1
-
-    def treeHeight(self):
-
-        # Base Case
+    def height(self):
+        h = 0
+        queue = collections.deque()
         if self.root is None:
-            return 0
+            return h
 
-        # Create a empty queue for level order traversal
-        q = []
+        queue.append(self.root)
 
-        # Enqueue Root and Initialize Height
-        q.append(self.root)
-        height = 0
+        while queue:
+            current_size = len(queue)
+            while current_size > 0:
+                current_node = queue.popleft()
+                current_size -= 1
 
-        while (True):
+                if current_node.left is not None:
+                    queue.append(current_node.left)
+                if current_node.right is not None:
+                    queue.append(current_node.right)
 
-            # nodeCount(queue size) indicates number of nodes
-            # at current level
-            nodeCount = len(q)
-            if nodeCount == 0:
-                return height
+            h += 1
+        return h
 
-            height += 1
-
-            # Dequeue all nodes of current level and Enqueue
-            # all nodes of next level
-            while (nodeCount > 0):
-                node = q[0]
-                q.pop(0)
-                if node.left is not None:
-                    q.append(node.left)
-                if node.right is not None:
-                    q.append(node.right)
-
-                nodeCount -= 1
