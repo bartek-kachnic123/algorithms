@@ -162,10 +162,12 @@ class BinarySearchTree:
         h = int(math.log2(count + 1))
         m = pow(2, h) - 1
 
-        self._compress(grand, count - m)
-
-        for x in self._generate_iteration(m, h):
-            self._compress(grand, x)
+        leaves = count - m
+        self._compress(grand, leaves)
+        count = count - leaves
+        while count > 1:
+            count = count // 2
+            self._compress(grand, count)
 
         self.root = grand.right
         self.root.parent = None
