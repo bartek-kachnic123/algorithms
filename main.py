@@ -1,46 +1,26 @@
-# This is a sample Python script.
 import bst
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def test_balanaceBST(numbers):
     tree = bst.BinarySearchTree()
-    for i in range(1, 4):
-        tree.insert(i)
-    for i in range(10, 2, -1):
-        tree.insert(i)
+    for num in numbers:
+        tree.insert(num)
 
-    node = tree.search(5)
-    tree2 = bst.BinarySearchTree()
-    tree2.insert(2)
-    tree2.printPreorder()
-    tree2.remove(2)
-    tree2.insert(5)
-    tree2.insert(10)
-    tree2.insert(5)
-    tree2.insert(3)
-    tree2.insert(4)
-    tree2.insert(4)
-    for i in range(-10, -4, 1):
-        tree2.insert(i)
+    tree.draw()
+    print(f"Wysokość drzewa przed zrównoważeniem = {tree.height()}")
     print()
-    tree2.printPreorder()
-    print()
-    print("przed", tree2.height())
-    tree2.balanceBST()
-    print()
-    print("po: ", tree2.height())
-    tree2.printInorder()
-    print()
-    for i in tree2.inorder_g():
-        print(i, end=" ")
+    tree.balanceBST()
+    tree.draw()
+    print(f"Wysokość drzewa po zrównoważenieniu = {tree.height()}")
 
 
-# Press the green button in the gutter to run the script.
+def main():
+    test_balanaceBST([1, 3, 5, 2, 10, 11, 40, 23, 15])
+    print()
+    test_balanaceBST([i for i in range(1, 10)])
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    main()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+

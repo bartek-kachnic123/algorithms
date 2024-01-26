@@ -190,24 +190,33 @@ class BinarySearchTree:
             child.parent = node
 
     def height(self):
-        h = 0
+        maxh = 0
         queue = collections.deque()
         if self.root is None:
-            return h
+            return maxh
 
-        queue.append(self.root)
+        queue.append((self.root, 1))
 
-        while queue:
-            current_size = len(queue)
-            while current_size > 0:
-                current_node = queue.popleft()
-                current_size -= 1
+        while len(queue) > 0:
+            item = queue.popleft()
+            node = item[0]
+            h = item[1]
+            if node.left is not None:
+                queue.append((node.left, h + 1))
+            if node.right is not None:
+                queue.append((node.right, h + 1))
 
-                if current_node.left is not None:
-                    queue.append(current_node.left)
-                if current_node.right is not None:
-                    queue.append(current_node.right)
+            maxh = max(maxh, h)
+        return maxh
 
-            h += 1
-        return h
+    def draw(self):
+        self._draw(self.root, level=0)
 
+    def _draw(self, node, level):
+        if node is None:
+            return
+        self._draw(node.right, level + 1)
+
+        print("   |" * level, end="")
+        print(f"---{node.data}")
+        self._draw(node.left, level + 1)
