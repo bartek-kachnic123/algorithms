@@ -15,6 +15,14 @@ I.     Implementacja algorytmu DSW w klasie BinarySearchTree.
             3) tests.py - zawiera testy metod z klasy BinarySearchTree
 
 
+* Klasa Node
+=========================
+
+-> data - zawiera podaną informacje
+-> left - łącze do lewego węzła
+-> right - łącze do prawego węzła
+-> parent - łącze do rodzica
+
 
 * Klasa BinarySearchTree
 =========================
@@ -35,7 +43,7 @@ I.     Implementacja algorytmu DSW w klasie BinarySearchTree.
 -> insert(data) (dodaje Node o elemencie data do drzewa) - dodaje element po odpowiedniej
     stronie drzewa i zwraca dodany obiekt Node.
 
--> remove(data) (usuwanie Node o elemencie Node) - usuwa i zwraca Node z drzewa, jeśli
+-> remove(data) (usuwanie Node o elemencie data z drzewa) - usuwa i zwraca Node z drzewa, jeśli
  został odnaleziony, w przeciwnym wypadku zwraca None
 
 -> travelUp(node, level=1): (szukanie poprzedników) - zwraca poprzednika, który był o określoną

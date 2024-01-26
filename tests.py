@@ -80,9 +80,21 @@ class BinaryTreeTest(unittest.TestCase):
         for i in numbers:
             tree.insert(i)
         tree.balanceBST()
+        h = tree.height()
         for num in numbers:
             node = tree.search(num)
-            self.assertEqual(tree.travelUp(node, 4).data, tree.root.data)
+            self.assertEqual(tree.travelUp(node, h).data, tree.root.data)
+
+    def test_travelUp_after_balance2(self):
+        numbers = [i for i in range(10, -10, -1)]
+        tree = BinaryTree()
+        for i in numbers:
+            tree.insert(i)
+        tree.balanceBST()
+        h = tree.height()
+        for num in numbers:
+            node = tree.search(num)
+            self.assertEqual(tree.travelUp(node, h).data, tree.root.data)
 
     def test_balanceBst(self):
         numbers = [1, 3, 6, 4, 2, 5, 91, 123, 11, 12312, 1, 3, 234, 23432, 2, 22, 22, 11]

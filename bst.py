@@ -109,10 +109,10 @@ class BinarySearchTree:
 
     def travelUp(self, node, level=1):
         x = node
-        while x and x != self.root and level != 0:
+        while x != self.root and level > 0:
             x = x.parent
             level -= 1
-        return x if x else self.root
+        return x
 
     def inorder_g(self):
         current = self.root
@@ -215,8 +215,7 @@ class BinarySearchTree:
     def _draw(self, node, level):
         if node is None:
             return
-        self._draw(node.right, level + 1)
 
-        print("   |" * level, end="")
-        print(f"---{node.data}")
+        self._draw(node.right, level + 1)
+        print("{}---{}".format("   |" * level, node.data))
         self._draw(node.left, level + 1)
