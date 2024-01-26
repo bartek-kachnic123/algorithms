@@ -43,6 +43,8 @@ I.     Implementacja algorytmu DSW w klasie BinarySearchTree.
 
 -> height() - zwraca aktualną wysokośc drzewa
 
+-> draw() - rysuje odwrócone drzewo ( poziomo).
+
 -> inorder() - generator zwracający node z kolejnością inorder
 
 -> printPreorder() - wypisuje node.data z kolejnością preorder
